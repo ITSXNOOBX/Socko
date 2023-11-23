@@ -1,0 +1,27 @@
+{
+  "name": "socko",
+  "version": "1.0.0",
+  "description": "Simple web-socket api to interact with a mobile application and provide real time data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "NODE_ENV=development nodemon index.js "
+  },
+  "keywords": [
+    "api",
+    "websocket",
+    "realtime"
+  ],
+  "author": "IMXNOOBX",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.1",
+    "socket.io": "^4.7.2"
+  }
+}
