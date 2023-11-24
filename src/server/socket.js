@@ -3,11 +3,18 @@ const globals = require('../globals')
 
 const _register = require('./commands/register')
 
-const io = globals.getIO();
-const server = globals.getServer();
 const allowed_headers = process.env.ALLOWED_HEADERS.split(',')
 
+let io;
+let log;
+let server;
+
 module.exports.init = async () => {
+    io = globals.getIO();
+    log = globals.getLog();
+
+    log.success("Socket initializer started.")
+
     io.on('connection', (socket) => {
         const origin = socket.handshake.headers.origin;
         if (!allowed_headers.includes(origin)) {
@@ -16,7 +23,7 @@ module.exports.init = async () => {
         }
 
         if (process.env.NODE_ENV === 'development')
-            console.log(`Socket connected: ${socket.id}`);
+            log.console(`Socket connected: ${socket.id}`)
 
         /**
         * @brief Custom registered actions
@@ -30,7 +37,7 @@ module.exports.init = async () => {
         */
         socket.on('verify', (msg) => {
             if (process.env.NODE_ENV === 'development')
-                console.log('Client requested verification', msg)
+                log.console(`Client requested verification: ${msg}`)
 
             io.emit('chat message', msg);
         });
@@ -40,7 +47,8 @@ module.exports.init = async () => {
         */
         socket.on('disconnect', () => {
             if (process.env.NODE_ENV === 'development')
-                console.log(`Socket disconnected: ${socket.id}`);
+                log.console(`Socket disconnected: ${socket.id}`)
+
         });
       });
       
@@ -48,9 +56,10 @@ module.exports.init = async () => {
 
 // Start the server
 module.exports.start = async () => {
+    server = globals.getServer();
     const port = process.env.PORT || 80;
   
     server.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
+        log.success(`Server is running on port ${port}`)
     });
 };

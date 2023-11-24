@@ -26,6 +26,18 @@ exports.getServer = () => {
   return globals.server;
 };
 
+exports.setLog = (log) => {
+  globals.log = log;
+};
+
+exports.getLog = () => {
+  if (!globals.log) {
+    throw new Error('Logger not initialized. Call setLog() first.');
+  }
+
+  return globals.log;
+};
+
 exports.setDB = (db) => {
   globals.db = db;
 };

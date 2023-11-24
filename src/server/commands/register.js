@@ -2,7 +2,7 @@
 
 const register = (socket) => {
     socket.on('register', (userData) => {
-        
+        console.log(userData)
     });
 };
 

@@ -5,6 +5,8 @@ const globals = require('../globals');
 const db_url = `mongodb://${process.env.DOCKER_HOST}:${process.env.DOCKER_PORT}`;
 const db_name = process.env.DOCKER_DB;
 
+let log;
+
 /**
  * @brief Define and export mongoose schemas
  */
@@ -37,18 +39,19 @@ module.exports.StudentGroup = mongoose.model('student_group', this.StudentGroupS
  * @brief Export init function
  */
 module.exports.init = () => {
+  log = globals.getLog();
   return new Promise(async (resolve, reject) => {
     try {
       mongoose.connect(`${db_url}/${db_name}`, { });
       const db = mongoose.connection;
 
       db.on('error', (err) => {
-        console.error('MongoDB connection error:', err);
+        log.error(`MongoDB connection error: ${err}`)
         reject(err);
       });
 
       db.once('open', async () => {
-        console.log('Connected to MongoDB');
+        log.success(`Connected to MongoDB`)
 
         const collections = await mongoose.connection.db.listCollections().toArray();
         // const databaseExists = collections.map(collection => collection.name).includes(db_name);
@@ -58,7 +61,7 @@ module.exports.init = () => {
           // Create the collections if the database doesn't exist
           await db.createCollection('teacher_data');
           await db.createCollection('student_group');
-          console.log('Collections created successfully');
+          log.success(`Collections created successfully`)
         }
 
         globals.setDB(db);
