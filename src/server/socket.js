@@ -9,13 +9,15 @@ let io;
 let log;
 let server;
 
-module.exports.init = async () => {
+module.exports.start = async () => {
     io = globals.getIO();
     log = globals.getLog();
 
     log.success("Socket initializer started.")
 
     io.on('connection', (socket) => {
+        log.console(`Socket connected: ${socket}`)
+        
         const origin = socket.handshake.headers.origin;
         if (!allowed_headers.includes(origin)) {
             socket.emit('invalidConnection', { success: false, message: 'Invalid connection' });
@@ -55,7 +57,7 @@ module.exports.init = async () => {
 }
 
 // Start the server
-module.exports.start = async () => {
+module.exports.init = async () => {
     server = globals.getServer();
     const port = process.env.PORT || 80;
   
