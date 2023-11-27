@@ -6,4 +6,4 @@ const register = (socket) => {
     });
 };
 
-module.exports = register;
+module.exports.register = register;

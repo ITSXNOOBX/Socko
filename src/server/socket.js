@@ -16,13 +16,11 @@ module.exports.start = async () => {
     log.success("Socket initializer started.")
 
     io.on('connection', (socket) => {
-        log.console(`Socket connected: ${socket}`)
-        
         const origin = socket.handshake.headers.origin;
-        if (!allowed_headers.includes(origin)) {
-            socket.emit('invalidConnection', { success: false, message: 'Invalid connection' });
-            return socket.disconnect();
-        }
+        // if (!allowed_headers.includes(origin)) {
+        //     socket.emit('invalidConnection', { success: false, message: 'Invalid connection' });
+        //     return socket.disconnect();
+        // }
 
         if (process.env.NODE_ENV === 'development')
             log.console(`Socket connected: ${socket.id}`)
