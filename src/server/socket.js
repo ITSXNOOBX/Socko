@@ -23,7 +23,7 @@ module.exports.start = async () => {
         // }
 
         if (process.env.NODE_ENV === 'development')
-            log.console(`Socket connected: ${socket.id}`)
+            log.console(`Socket connected: ${socket.id}, origin: ${origin}`)
 
         /**
         * @brief Custom registered actions
@@ -37,7 +37,7 @@ module.exports.start = async () => {
         */
         socket.on('verify', (msg) => {
             if (process.env.NODE_ENV === 'development')
-                log.console(`Client requested verification: ${msg}`)
+                log.console(`Client requested verification: ${msg?.emitName}`)
 
             io.emit('verify', msg);
         });
@@ -58,7 +58,7 @@ module.exports.start = async () => {
 module.exports.init = async () => {
     server = globals.getServer();
     const port = process.env.PORT || 80;
-  
+    
     server.listen(port, () => {
         log.success(`Server is running on port ${port}`)
     });
