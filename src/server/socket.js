@@ -39,7 +39,7 @@ module.exports.start = async () => {
             if (process.env.NODE_ENV === 'development')
                 log.console(`Client requested verification: ${msg}`)
 
-            io.emit('chat message', msg);
+            io.emit('verify', msg);
         });
       
         /**
