@@ -297,7 +297,7 @@ const get_rand_animal = () => {
 }
 
 const get_rand_code = () => {
-
+    return `${get_rand_obj()}-${get_rand_animal()}`
 }
 
-module.exports = { objects_words, animal_words };
+module.exports = { get_rand_code, get_rand_obj, get_rand_animal };
