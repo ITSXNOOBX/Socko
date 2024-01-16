@@ -9,23 +9,33 @@ const register = (socket) => {
     const log = g.getLog();
 
     socket.on('register', async (ud) => {
-        if (!ud.email || !ud.password)
+        let parsed;
+        try {
+            parsed = JSON.parse(ud)
+        } catch (e) { }
+
+        if (!parsed.email || !parsed.password)
             return socket.emit("register", { success: false, message: "Invalid request parameters." });
 
-        if (!isHash(ud.email) || !isHash(ud.password))
+        if (!isHash(parsed.email) || !isHash(parsed.password))
             return socket.emit("register", { success: false, message: "Data must be hashed." });
 
         const new_user = {
-            email: ud.email,
-            password: ud.password,
+            email: parsed.email,
+            password: parsed.password,
             code: rand_words.get_rand_code(),
         }
 
         try {
-            const existingUser = await mongo.TeacherData.findOne({ email: ud.email });
+            const existingUser = await mongo.TeacherData.findOne({ email: parsed.email, password: parsed.password });
 
             if (existingUser) 
-                return socket.emit("register", { success: false, message: "Email already exists." });
+                return socket.emit("register", { success: true, message: "User has been successfully logged in.", loggedIn: true, teacherCode: existingUser.code });
+
+            const existingEmail = await mongo.TeacherData.findOne({ email: parsed.email });
+
+            if (existingEmail) 
+                return socket.emit("register", { success: true, message: "Invalid password, the password linked to this email its different.", loggedIn: false  });
             
             mongo.TeacherData.create(new_user);
         } catch (e) {
@@ -33,7 +43,7 @@ const register = (socket) => {
             socket.emit("register", { success: false, message: "Failed to register." });
         }
 
-        socket.emit("register", { success: true, message: "Register Success." });
+        socket.emit("register", { success: true, message: "Register Success. Cloud features have been enabled!", teacherCode: new_user.code });
     });
 };
 

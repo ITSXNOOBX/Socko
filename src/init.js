@@ -26,7 +26,7 @@ app.use((req, res, next) => {
     log.console(`${req.ip} | ${req.protocol} - ${req.originalUrl}`);
     next();
 })
-
+app.get('/status', (req, res) => { res.status(200).send({success: true}); })
 
 /**
  * @summary Export globally all these functions

@@ -56,12 +56,15 @@ module.exports.init = () => {
         const collections = await mongoose.connection.db.listCollections().toArray();
         // const databaseExists = collections.map(collection => collection.name).includes(db_name);
         // console.log("collections", collections)
+
         
         if (collections.length == 0) {
           // Create the collections if the database doesn't exist
           await db.createCollection('teacher_data');
           await db.createCollection('student_group');
           log.success(`Collections created successfully`)
+        } else {
+          log.success(`Database is already created, connecting to it.`)
         }
 
         globals.setDB(db);
