@@ -29,9 +29,11 @@ const update_class = (socket) => {
             existingGroup.location =  { x: parsed.location_x, y: parsed.location_y };
             existingGroup.progress = parsed.progress;
 
-            const updatedGroup = await existingGroup.save();
-
-            return socket.emit("update_class", { success: true, message: "Student group updated successfully.", updatedGroup });
+            await existingGroup.save();
+            const all_students = await mongo.StudentGroup.fetch();
+            
+            socket.emit("fetch_class", { success: true, message: "Student retreived updated successfully.", all_students });
+            return socket.emit("update_class", { success: true, message: "Student group updated successfully.", });
         } catch (e) {
             log.error(e);
             socket.emit("update_class", { success: false, message: "Failed to update class." });
