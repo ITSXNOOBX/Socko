@@ -30,7 +30,10 @@ const update_class = (socket) => {
             existingGroup.progress = parsed.progress;
 
             await existingGroup.save();
-            const all_students = await mongo.StudentGroup.fetch();
+            const all_students = await mongo.StudentGroup.find({ teacher_code: parsed.class });
+
+            console.log('all_students updated, this is the list now: ', all_students)
+            console.log('Emmiting the  result to all fetch_class')
             
             socket.emit("fetch_class", { success: true, message: "Student retreived updated successfully.", all_students });
             return socket.emit("update_class", { success: true, message: "Student group updated successfully.", });

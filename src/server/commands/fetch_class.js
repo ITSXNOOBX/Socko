@@ -16,12 +16,16 @@ const fetch_class = (socket) => {
             return socket.emit("fetch_class", { success: false, message: "Invalid request parameters." });
 
         try {
-            const teacherExists = await mongo.TeacherData.findOne({ password: parsed.token });
+            const teacherExists = await mongo.TeacherData.findOne({ email: parsed.token });
 
             if (!teacherExists)
                 return socket.emit("fetch_class", { success: false, message: "Invalid auth token." });
 
-            const all_students = await mongo.StudentGroup.fetch();
+            console.log('teacherExists', teacherExists)
+
+            const all_students = await mongo.StudentGroup.find({ teacher_code: teacherExists.code });
+
+            console.log('fetch_class: all_students', all_students)
 
             return socket.emit("fetch_class", { success: true, message: "Student retreived updated successfully.", all_students });
         } catch (e) {
